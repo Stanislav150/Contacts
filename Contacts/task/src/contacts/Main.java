@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Main {
     public static final Scanner scanner = new Scanner(System.in);
     public static boolean repeat = true;
-    List<Contact> contacts = new ArrayList<>();
+    List<ContactPerson> contacts = new ArrayList<>();
 
     public void menu() {
         System.out.print("Enter action (add, remove, edit, count, list, exit): ");
@@ -46,7 +46,7 @@ public class Main {
         String surname = scanner.nextLine();
         System.out.print("Enter the number: ");
         String number = scanner.nextLine();
-        Contact contact = new Contact().setName(name)
+        ContactPerson contact = new ContactPerson().setName(name)
                 .setSurname(surname)
                 .setPhoneNamber(number);
         contacts.add(contact);
@@ -58,7 +58,7 @@ public class Main {
      */
     public void showList() {
         int count = 1;
-        for (Contact c : contacts) {
+        for (ContactPerson c : contacts) {
             System.out.printf("%d. %s%n", count, c.toString());
             count++;
         }
@@ -97,7 +97,7 @@ public class Main {
             showList();
             System.out.print("Select a record: ");
             int index = scanner.nextInt() - 1;
-            Contact contactForEdition = contacts.get(index);
+            ContactPerson contactForEdition = contacts.get(index);
             System.out.print("Select a field (name, surname, number): ");
             String field = scanner.next();
             switch (field) {
