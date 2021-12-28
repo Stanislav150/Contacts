@@ -1,9 +1,17 @@
 package contacts;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ContactPerson {
+public class ContactPerson extends Contact {
+    public static final Scanner scanner = new Scanner(System.in);
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    private DateTimeFormatter dateFormatter;
     /*
         User Name Requirements
 
@@ -38,21 +46,94 @@ public class ContactPerson {
     private static final Pattern namePattern = Pattern.compile(NAME_PATTERN);
     private static final Pattern phonePattern = Pattern.compile(PHONE_PATTERN);
 
+    /*
+         Какие поля должны быть доступны в классе Person:
+         name;
+         surname;
+         gender;
+         phoneNumber; класс super
+         dateCreation; класс super
+         dateEditing; класс super
+     */
+
 
     private String name;
     private String surname;
-    private String phoneNamber;
+    private String birthday;
+    private String gender;
+
 
     ContactPerson() {
-        this.name = "";
-        this.surname = "";
-        this.phoneNamber = "";
     }
 
-    ContactPerson(String name, String surname, String phoneNamber) {
+    ContactPerson(String name, String surname, String birthday, String gender) {
         this.name = name;
         this.surname = surname;
-        this.phoneNamber = phoneNamber;
+        this.birthday = birthday;
+        this.gender = gender;
+        this.phoneNumber = getPhoneNumber();
+        this.dateCreation = getDateCreation();
+        this.dateEditing = getDateEditing();
+    }
+
+    public ContactPerson createContact() {
+        ContactPerson contactPerson = new ContactPerson();
+        System.out.print("Enter the name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter the surname: ");
+        String surname = scanner.nextLine();
+        System.out.print("Enter the birth date: ");
+        String birthday = scanner.nextLine();
+        System.out.print("Enter the gender (M, F):");
+        String gender = scanner.nextLine();
+        System.out.print("Enter the number: ");
+        String number = scanner.nextLine();
+        contactPerson.setName(name)
+                .setSurname(surname)
+                .setBirthday(birthday)
+                .setGender(gender)
+                .setPhoneNumber(number)
+                .setDateCreation()
+                .setDateEditing()
+                .setPersonFlag(true);
+        return contactPerson;
+    }
+
+    public ContactPerson editContact(ContactPerson contactForEdition) {
+        System.out.print("Select a field (name, surname, birth, gender, number): ");
+        String field = scanner.nextLine();
+        switch (field) {
+            case "name":
+                System.out.print("Enter name: ");
+                contactForEdition.setName(scanner.nextLine());
+                break;
+            case "surname":
+                System.out.print("Enter surname: ");
+                contactForEdition.setSurname(scanner.nextLine());
+                break;
+            case "birth":
+                System.out.print("Enter the birth date:");
+                String removingLineBreak = scanner.nextLine();
+                contactForEdition.setBirthday(scanner.nextLine());
+                break;
+            case "gender":
+                System.out.print("Enter the gender (M, F): ");
+                removingLineBreak = scanner.nextLine();
+                contactForEdition.setGender(scanner.nextLine());
+                break;
+            case "number":
+                System.out.print("Enter number: ");
+                removingLineBreak = scanner.nextLine();
+                contactForEdition.setPhoneNumber(scanner.nextLine());
+                break;
+            default:
+                System.out.println("Bad parameters!");
+                System.out.print("Input command: ");
+        }
+        contactForEdition.setDateEditing();
+
+        return contactForEdition;
+
     }
 
     public String getName() {
@@ -63,8 +144,12 @@ public class ContactPerson {
         return surname;
     }
 
-    public String getPhoneNamber() {
-        return phoneNamber;
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public String getGender() {
+        return gender;
     }
 
     public ContactPerson setName(String name) {
@@ -74,35 +159,63 @@ public class ContactPerson {
     }
 
     public ContactPerson setSurname(String surname) {
-        //if (checkValidityName(name))
+        //if (checkValidityName(surname))
         this.surname = surname;
         return this;
     }
 
-    public ContactPerson setPhoneNamber(String phoneNamber) {
-        if (checkValidityPhone(phoneNamber))
-            this.phoneNamber = phoneNamber;
+    /**
+     * @param birthday YYYY-mm-dd
+     * @return class object ContactPerson
+     */
+    public ContactPerson setBirthday(String birthday) {
+        if (checkValidityBirthday(birthday))
+            this.birthday = birthday;
         else {
-            System.out.println("Wrong number format!");
-            this.phoneNamber = "[no number]";
+            System.out.println("Bad birth date!");
+            this.birthday = "[no data]";
         }
         return this;
     }
 
-    public boolean hasNumber() {
-        if (this.phoneNamber.equals("No number") || this.phoneNamber.equals("")) return false;
-        else return true;
+    public ContactPerson setGender(String gender) {
+        if (gender.equals("M") || (gender.equals("F")))
+            this.gender = gender;
+        else {
+            System.out.println("Bad gender!");
+            this.gender = "[no data]";
+        }
+        return this;
     }
 
-    @Override
+    public String printName() {
+        return String.format(name + " " + surname);
+    }
     public String toString() {
-        return String.format("%s %s, %s", name, surname, phoneNamber);
+        return String.format("Name: %s%n"
+                             + "Surname: %s%n"
+                             + "Birth date: %s%n"
+                             + "Gender: %s%n"
+                             + "Number: %s%n"
+                             + "Time created: %s%n"
+                             + "Time last edit: %s%n ", name, surname, birthday, gender, phoneNumber,
+                printDataTime(dateCreation), printDataTime(dateEditing));
     }
 
     boolean checkValidityName(final String username) {
         Matcher matcher = namePattern.matcher(username);
         return matcher.matches();
     }
+
+    boolean checkValidityBirthday(String birthday) {
+//        try {
+//            this.dateFormatter.parse(birthday);
+//        } catch (DateTimeParseException e) {
+//            return false;
+//        }
+        return false;
+    }
+
 
     boolean checkValidityPhone(final String phoneNumber) {
         Matcher matcher = phonePattern.matcher(phoneNumber);

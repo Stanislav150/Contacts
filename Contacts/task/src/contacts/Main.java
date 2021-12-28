@@ -8,60 +8,63 @@ import java.util.Scanner;
 public class Main {
     public static final Scanner scanner = new Scanner(System.in);
     public static boolean repeat = true;
-    List<ContactPerson> contacts = new ArrayList<>();
+    List<Contact> contacts = new ArrayList<>();
+    Contact contact = new Contact();
+    ContactPerson contactPerson = new ContactPerson();
+    ContactOrganization contactOrganization = new ContactOrganization();
+
 
     public void menu() {
-        System.out.print("Enter action (add, remove, edit, count, list, exit): ");
-        String command = scanner.nextLine();
+        System.out.print("Enter action (add, remove, edit, count, info, exit): ");
+        String command = scanner.next();
+        if (command.equals("add")) {
+            System.out.print("Enter the type (person, organization): ");
+            String type = scanner.next();
+            if (type.equals("person")) contact.isPerson = true;
+            else if (type.equals("organization")) contact.isPerson = false;
+        }
+
         switch (command) {
-            case "add":
-                addContact();
+            case "add": addContact();
                 break;
-            case "remove":
-                removeContact();
+            case "remove": removeContact();
                 break;
-            case "edit":
-                editContact();
+            case "edit": edit();
                 break;
-            case "count":
-                count();
+            case "count": count();
                 break;
-            case "list":
-                showList();
+            case "info": info();
                 break;
-            case "exit":
-                exit();
+            case "exit": exit();
                 break;
             default:
                 System.out.println("Bad parameters!");
                 System.out.print("Input command: ");
 
         }
+
     }
 
     public void addContact() {
-        System.out.print("Enter the name: ");
-        String name = scanner.nextLine();
-        System.out.print("Enter the surname: ");
-        String surname = scanner.nextLine();
-        System.out.print("Enter the number: ");
-        String number = scanner.nextLine();
-        ContactPerson contact = new ContactPerson().setName(name)
-                .setSurname(surname)
-                .setPhoneNamber(number);
-        contacts.add(contact);
-        System.out.println("The record added.");
+        if (contact.isPerson) contacts.add(contactPerson.createContact());
+        else contacts.add(contactOrganization.createContact());
+        System.out.println("The record added.\n");
     }
 
     /**
-     *
+     * Очень интересное обращение к элементам списка. В нём хранятся два разных по структуре типа
+     * элементов, обращаемся к ним, приводя их тип к нужному значению
      */
-    public void showList() {
+    public void info() {
         int count = 1;
-        for (ContactPerson c : contacts) {
-            System.out.printf("%d. %s%n", count, c.toString());
+        for (Contact c : contacts) {
+            if (c.isPerson) System.out.printf("%d. %s%n", count, ((ContactPerson) c).printName());
+            else System.out.printf("%d. %s%n", count, ((ContactOrganization) c).printNameOrganization());
             count++;
         }
+        System.out.println("Enter index to show info: ");
+        int record = scanner.nextInt() - 1;
+        System.out.println(contacts.get(record).toString());
     }
 
     /**
@@ -74,7 +77,7 @@ public class Main {
     public void removeContact() {
         if (contacts.size() == 0) System.out.println("No records to remove!");
         else {
-            showList();
+            info();
             System.out.println("Select a record: ");
             int index = scanner.nextInt() - 1;
             contacts.remove(index);
@@ -91,42 +94,35 @@ public class Main {
      * Enter number: > (123) 234 345-456
      * The record updated!
      */
-    public void editContact() {
+    public void edit() {
         if (contacts.size() == 0) System.out.println("No records to edit!");
         else {
-            showList();
+            int count = 1;
+            for (Contact c : contacts) {
+                if (c.isPerson) System.out.printf("%d. %s%n", count, ((ContactPerson) c).printName());
+                else System.out.printf("%d. %s%n", count, ((ContactOrganization) c).printNameOrganization());
+                count++;
+            }
             System.out.print("Select a record: ");
             int index = scanner.nextInt() - 1;
-            ContactPerson contactForEdition = contacts.get(index);
-            System.out.print("Select a field (name, surname, number): ");
-            String field = scanner.next();
-            switch (field) {
-                case "name":
-                    System.out.print("Enter name: ");
-                    contactForEdition.setName(scanner.next());
-                    break;
-                case "surname":
-                    System.out.print("Enter surname: ");
-                    contactForEdition.setSurname(scanner.next());
-                    break;
-                case "number":
-                    System.out.print("Enter number: ");
-                    String removingLineBreak = scanner.nextLine();
-                    contactForEdition.setPhoneNamber(scanner.nextLine());
-                    break;
-                default:
-                    System.out.println("Bad parameters!");
-                    System.out.print("Input command: ");
+            Contact contactForEdition;
+            if (contacts.get(index).isPerson) {
+                contactForEdition = contactPerson
+                        .editContact((ContactPerson) contacts.get(index));
+            }
+            else {
+                contactForEdition = contactOrganization
+                        .editContact((ContactOrganization) contacts.get(index));
+
             }
             contacts.set(index, contactForEdition);
-            System.out.println("The record updated!");
+            System.out.println("The record updated!\n");
         }
     }
 
     public void count() {
         System.out.printf("The Phone Book has %d records.%n", contacts.size());
     }
-
 
     public static void exit() {
         repeat = false;
