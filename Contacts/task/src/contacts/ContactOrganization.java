@@ -1,5 +1,8 @@
 package contacts;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -8,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ContactOrganization extends Contact {
-
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     public static final Scanner scanner = new Scanner(System.in);
 
     /*
@@ -74,24 +77,21 @@ public class ContactOrganization extends Contact {
         return contactOrganization;
     }
 
-    public ContactOrganization editContact(ContactOrganization contactForEdition) {
+    public ContactOrganization editContact(ContactOrganization contactForEdition) throws IOException {
         System.out.print("Select a field (organizationName, address, number): ");
-        String field = scanner.next();
+        String field = br.readLine();
         switch (field) {
             case "organizationName":
                 System.out.print("Enter the organization name: ");
-                String removingLineBreak = scanner.nextLine();
-                contactForEdition.setOrganizationName(scanner.nextLine());
+                contactForEdition.setOrganizationName(br.readLine());
                 break;
             case "address":
                 System.out.print("Enter the address: ");
-                removingLineBreak = scanner.nextLine();
-                contactForEdition.setAddress(scanner.nextLine());
+                contactForEdition.setAddress(br.readLine());
                 break;
             case "number":
                 System.out.print("Enter the number: ");
-                removingLineBreak = scanner.nextLine();
-                contactForEdition.setPhoneNumber(scanner.nextLine());
+                contactForEdition.setPhoneNumber(br.readLine());
                 break;
             default:
                 System.out.println("Bad parameters!");

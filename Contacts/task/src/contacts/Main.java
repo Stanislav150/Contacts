@@ -1,5 +1,6 @@
 package contacts;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -14,7 +15,7 @@ public class Main {
     ContactOrganization contactOrganization = new ContactOrganization();
 
 
-    public void menu() {
+    public void menu() throws IOException {
         System.out.print("Enter action (add, remove, edit, count, info, exit): ");
         String command = scanner.next();
         if (command.equals("add")) {
@@ -94,7 +95,7 @@ public class Main {
      * Enter number: > (123) 234 345-456
      * The record updated!
      */
-    public void edit() {
+    public void edit() throws IOException {
         if (contacts.size() == 0) System.out.println("No records to edit!");
         else {
             int count = 1;
@@ -128,7 +129,7 @@ public class Main {
         repeat = false;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Main m = new Main();
         while (repeat) m.menu();
     }

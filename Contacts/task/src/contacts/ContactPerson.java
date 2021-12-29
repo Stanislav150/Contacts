@@ -1,6 +1,7 @@
 package contacts;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -99,32 +100,29 @@ public class ContactPerson extends Contact {
         return contactPerson;
     }
 
-    public ContactPerson editContact(ContactPerson contactForEdition) {
+    public ContactPerson editContact(ContactPerson contactForEdition) throws IOException {
         System.out.print("Select a field (name, surname, birth, gender, number): ");
-        String field = scanner.nextLine();
+        String field = br.readLine();
         switch (field) {
             case "name":
                 System.out.print("Enter name: ");
-                contactForEdition.setName(scanner.nextLine());
+                contactForEdition.setName(br.readLine());
                 break;
             case "surname":
                 System.out.print("Enter surname: ");
-                contactForEdition.setSurname(scanner.nextLine());
+                contactForEdition.setSurname(br.readLine());
                 break;
             case "birth":
                 System.out.print("Enter the birth date:");
-                String removingLineBreak = scanner.nextLine();
-                contactForEdition.setBirthday(scanner.nextLine());
+                contactForEdition.setBirthday(br.readLine());
                 break;
             case "gender":
                 System.out.print("Enter the gender (M, F): ");
-                removingLineBreak = scanner.nextLine();
-                contactForEdition.setGender(scanner.nextLine());
+                contactForEdition.setGender(br.readLine());
                 break;
             case "number":
                 System.out.print("Enter number: ");
-                removingLineBreak = scanner.nextLine();
-                contactForEdition.setPhoneNumber(scanner.nextLine());
+                contactForEdition.setPhoneNumber(br.readLine());
                 break;
             default:
                 System.out.println("Bad parameters!");
