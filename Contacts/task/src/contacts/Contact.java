@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class Contact implements Serializable{
+public abstract class Contact implements Serializable {
     /*
      Requirements for the user's phone.
 
@@ -36,7 +36,8 @@ public abstract class Contact implements Serializable{
     LocalDateTime dateEditing;
 
 
-    Contact() {}
+    Contact() {
+    }
 
     Contact(String phoneNumber, LocalDateTime dateCreation, LocalDateTime dateEditing) {
         this.phoneNumber = phoneNumber;
@@ -66,7 +67,6 @@ public abstract class Contact implements Serializable{
     }
 
 
-
     public Contact setPhoneNumber(String phoneNumber) {
         if (checkValidityPhone(phoneNumber))
             this.phoneNumber = phoneNumber;
@@ -94,6 +94,7 @@ public abstract class Contact implements Serializable{
         return LocalDateTime.of(LocalDate.now(), LocalTime.of(hour, minute)).toString();
 
     }
+
     public boolean hasNumber() {
         return (this.phoneNumber.equals("No number") || this.phoneNumber.equals(""));
     }

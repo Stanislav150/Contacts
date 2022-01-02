@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ContactPerson extends Contact implements Serializable{
+public class ContactPerson extends Contact implements Serializable {
 
     public static final Scanner scanner = new Scanner(System.in);
     private static final long serialVersionUID = -6695556078576800841L;
@@ -23,7 +23,6 @@ public class ContactPerson extends Contact implements Serializable{
     */
     private static final String NAME_PATTERN =
             "^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){1,18}[a-zA-Z0-9]$";
-
 
 
     private static final Pattern namePattern = Pattern.compile(NAME_PATTERN);
@@ -81,7 +80,6 @@ public class ContactPerson extends Contact implements Serializable{
                 .setDateEditing();
         return contactPerson;
     }
-
 
 
     @Override

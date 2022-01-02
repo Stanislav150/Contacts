@@ -6,6 +6,7 @@ import java.util.*;
 
 public class Main implements Serializable {
 
+
     transient static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private static final long serialVersionUID = -8280650876184340946L;
     public static boolean repeat = true;
@@ -91,8 +92,7 @@ public class Main implements Serializable {
             if (whatToDo.equals("edit")) edit(record);
             else if (whatToDo.equals("delete")) removeContact(record);
             else if (whatToDo.equals("menu")) menu();
-        }
-        else if (command.equals("back")) showList();
+        } else if (command.equals("back")) showList();
     }
 
 
