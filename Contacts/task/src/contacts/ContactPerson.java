@@ -1,18 +1,17 @@
 package contacts;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.io.Serializable;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ContactPerson extends Contact {
+public class ContactPerson extends Contact implements Serializable{
+
     public static final Scanner scanner = new Scanner(System.in);
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private DateTimeFormatter dateFormatter;
+    private static final long serialVersionUID = -6695556078576800841L;
+    //transient BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
     /*
         User Name Requirements
 
@@ -26,35 +25,18 @@ public class ContactPerson extends Contact {
             "^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){1,18}[a-zA-Z0-9]$";
 
 
-    /*
-        Requirements for the user's phone.
-
-       •	 A phone number can contain one group
-       •	If it is divided into several groups, then there may be a different number of them.
-       •	There may be spaces or dashes between groups, or both. For example +0 (123) 456-789-Abcd
-       •	There may or may not be a plus sign in front of the first group.
-       •	The first or second group can be enclosed in parentheses (123) or +0 (123).
-            No more than one group is enclosed in brackets. Brackets are not required, they may not be.
-       •	The group can contain numbers, uppercase and lowercase English letters.
-            The group must consist of at least 2 characters.
-            But the first group can consist of only one character.
-
-    */
-    private static final String PHONE_PATTERN = "^(\\+?[a-zA-Z0-9]*[ -]?\\(?[a-zA-z0-9]{2,}\\)?)" +
-                                                "([ -]([a-zA-Z0-9]{2,}))*$" +
-                                                "|^(\\+?([a-zA-Z0-9]{1,}))$";
 
     private static final Pattern namePattern = Pattern.compile(NAME_PATTERN);
-    private static final Pattern phonePattern = Pattern.compile(PHONE_PATTERN);
+
 
     /*
-         Какие поля должны быть доступны в классе Person:
+         Which fields should be available in the Person class:
          name;
          surname;
          gender;
-         phoneNumber; класс super
-         dateCreation; класс super
-         dateEditing; класс super
+         phoneNumber; super class
+         dateCreation; super class
+         dataEditing; super class
      */
 
 
@@ -77,6 +59,7 @@ public class ContactPerson extends Contact {
         this.dateEditing = getDateEditing();
     }
 
+    @Override
     public ContactPerson createContact() {
         ContactPerson contactPerson = new ContactPerson();
         System.out.print("Enter the name: ");
@@ -95,42 +78,42 @@ public class ContactPerson extends Contact {
                 .setGender(gender)
                 .setPhoneNumber(number)
                 .setDateCreation()
-                .setDateEditing()
-                .setPersonFlag(true);
+                .setDateEditing();
         return contactPerson;
     }
 
-    public ContactPerson editContact(ContactPerson contactForEdition) throws IOException {
+
+
+    @Override
+    public void editContact() throws IOException {
         System.out.print("Select a field (name, surname, birth, gender, number): ");
-        String field = br.readLine();
+        String field = scanner.next();
         switch (field) {
             case "name":
                 System.out.print("Enter name: ");
-                contactForEdition.setName(br.readLine());
+                setName(Main.br.readLine());
                 break;
             case "surname":
                 System.out.print("Enter surname: ");
-                contactForEdition.setSurname(br.readLine());
+                setSurname(Main.br.readLine());
                 break;
             case "birth":
                 System.out.print("Enter the birth date:");
-                contactForEdition.setBirthday(br.readLine());
+                setBirthday(Main.br.readLine());
                 break;
             case "gender":
                 System.out.print("Enter the gender (M, F): ");
-                contactForEdition.setGender(br.readLine());
+                setGender(Main.br.readLine());
                 break;
             case "number":
                 System.out.print("Enter number: ");
-                contactForEdition.setPhoneNumber(br.readLine());
+                super.setPhoneNumber(Main.br.readLine());
                 break;
             default:
                 System.out.println("Bad parameters!");
                 System.out.print("Input command: ");
         }
-        contactForEdition.setDateEditing();
-
-        return contactForEdition;
+        super.setDateEditing();
 
     }
 
@@ -186,9 +169,12 @@ public class ContactPerson extends Contact {
         return this;
     }
 
+    @Override
     public String printName() {
-        return String.format(name + " " + surname);
+        return name + " " + surname;
     }
+
+    @Override
     public String toString() {
         return String.format("Name: %s%n"
                              + "Surname: %s%n"
@@ -206,17 +192,7 @@ public class ContactPerson extends Contact {
     }
 
     boolean checkValidityBirthday(String birthday) {
-//        try {
-//            this.dateFormatter.parse(birthday);
-//        } catch (DateTimeParseException e) {
-//            return false;
-//        }
+        //not completed
         return false;
-    }
-
-
-    boolean checkValidityPhone(final String phoneNumber) {
-        Matcher matcher = phonePattern.matcher(phoneNumber);
-        return matcher.matches();
     }
 }

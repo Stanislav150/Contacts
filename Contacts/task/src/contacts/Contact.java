@@ -1,12 +1,14 @@
 package contacts;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Contact {
+public abstract class Contact implements Serializable{
     /*
      Requirements for the user's phone.
 
@@ -26,21 +28,30 @@ public class Contact {
                                                 "|^(\\+?([a-zA-Z0-9]{1,}))$";
 
     private static final Pattern phonePattern = Pattern.compile(PHONE_PATTERN);
+    private static final long serialVersionUID = 759894381010013822L;
 
 
     String phoneNumber;
     LocalDateTime dateCreation;
     LocalDateTime dateEditing;
-    public boolean isPerson;
+
 
     Contact() {}
 
-    Contact(String phoneNumber, LocalDateTime dateCreation, LocalDateTime dateEditing, boolean isPerson) {
+    Contact(String phoneNumber, LocalDateTime dateCreation, LocalDateTime dateEditing) {
         this.phoneNumber = phoneNumber;
         this.dateCreation = dateCreation;
         this.dateEditing = dateEditing;
-        this.isPerson = isPerson;
+
     }
+
+    public abstract Contact createContact();
+
+    public abstract void editContact() throws IOException;
+
+    public abstract String printName();
+
+    public abstract String toString();
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -76,11 +87,6 @@ public class Contact {
         return this;
     }
 
-
-    public Contact setPersonFlag(boolean isPerson) {
-        this.isPerson = isPerson;
-        return this;
-    }
 
     public String printDataTime(LocalDateTime localDateTime) {
         int hour = localDateTime.getHour();

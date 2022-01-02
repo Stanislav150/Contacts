@@ -1,8 +1,7 @@
 package contacts;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -10,8 +9,9 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ContactOrganization extends Contact {
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+public class ContactOrganization extends Contact implements Serializable {
+
+    private static final long serialVersionUID = -1635398767891325014L;
     public static final Scanner scanner = new Scanner(System.in);
 
     /*
@@ -37,12 +37,12 @@ public class ContactOrganization extends Contact {
     private static final Pattern addressPattern = Pattern.compile(ADDRESS_PATTERN);
 
     /*
-         Какие поля должны быть доступны в классе Organization:
+         Which fields should be available in the Organization class:
          organizationName;
          address;
-         phoneNumber; класс super
-         dateCreation; класс super
-         dateEditing; класс super
+         phone Number; super class
+         dateCreation; super class
+         dataEditing; super class
      */
 
 
@@ -60,6 +60,7 @@ public class ContactOrganization extends Contact {
         this.dateEditing = getDateEditing();
     }
 
+    @Override
     public ContactOrganization createContact() {
         ContactOrganization contactOrganization = new ContactOrganization();
         System.out.print("Enter the organization name:");
@@ -72,35 +73,32 @@ public class ContactOrganization extends Contact {
                 .setAddress(address)
                 .setPhoneNumber(number)
                 .setDateCreation()
-                .setDateEditing()
-                .setPersonFlag(false);
+                .setDateEditing();
         return contactOrganization;
     }
 
-    public ContactOrganization editContact(ContactOrganization contactForEdition) throws IOException {
+    @Override
+    public void editContact() throws IOException {
         System.out.print("Select a field (organizationName, address, number): ");
-        String field = br.readLine();
+        String field = Main.br.readLine();
         switch (field) {
             case "organizationName":
                 System.out.print("Enter the organization name: ");
-                contactForEdition.setOrganizationName(br.readLine());
+                setOrganizationName(Main.br.readLine());
                 break;
             case "address":
                 System.out.print("Enter the address: ");
-                contactForEdition.setAddress(br.readLine());
+                setAddress(Main.br.readLine());
                 break;
             case "number":
                 System.out.print("Enter the number: ");
-                contactForEdition.setPhoneNumber(br.readLine());
+                super.setPhoneNumber(Main.br.readLine());
                 break;
             default:
                 System.out.println("Bad parameters!");
                 System.out.print("Input command: ");
         }
-        contactForEdition.setDateEditing();
-
-        return contactForEdition;
-
+        super.setDateEditing();
     }
 
     public String getOrganizationName() {
@@ -113,26 +111,28 @@ public class ContactOrganization extends Contact {
 
     public ContactOrganization setOrganizationName(String organizationName) {
         //if (checkValidityOrganizationName(organizationName))
-            this.organizationName = organizationName;
+        this.organizationName = organizationName;
         return this;
     }
 
     public ContactOrganization setAddress(String address) {
         //if (checkValidityAddress(address))
-            this.address = address;
+        this.address = address;
         return this;
     }
 
-    public String printNameOrganization() {
-        return String.format(organizationName);
+    @Override
+    public String printName() {
+        return organizationName;
     }
 
+    @Override
     public String toString() {
         return String.format("Organization name: %s%n"
-                          + "Address: %s%n"
-                          + "Number: %s%n"
-                          + "Time created: %s%n"
-                          + "Time last edit: %s%n ", organizationName, address, phoneNumber,
+                             + "Address: %s%n"
+                             + "Number: %s%n"
+                             + "Time created: %s%n"
+                             + "Time last edit: %s%n ", organizationName, address, phoneNumber,
                 printDataTime(dateCreation), printDataTime(dateEditing));
     }
 
